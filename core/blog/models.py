@@ -1,5 +1,7 @@
 from django.db import models
 
+from core.accounts.models import User
+
 
 class Blog(models.Model):
     """

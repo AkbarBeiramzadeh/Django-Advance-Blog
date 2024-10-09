@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
 from .models import User
 
 
@@ -22,12 +21,22 @@ class CustomUserAdmin(UserAdmin):
                 'is_staff', 'is_active', 'is_superuser'
             )
         }),
+        ('group permissions', {
+            "fields": (
+                'groups', 'user_permissions',
+            )
+        }),
+        ('important date', {
+            "fields": (
+                'last_login',
+            )
+        }),
     )
 
     add_fieldsets = (
         (None, {
             "classes": ('wide',),
-            "fields": ('email', 'password1','password2', 'is_staff', 'is_active', 'is_superuser')
+            "fields": ('email', 'password1', 'password2', 'is_staff', 'is_active', 'is_superuser')
         }),
     )
 

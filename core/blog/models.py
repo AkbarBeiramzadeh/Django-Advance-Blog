@@ -1,9 +1,12 @@
 from django.db import models
 
-from core.accounts.models import User
+from django.contrib.auth import get_user_model
+
+# getting user model object
+User = get_user_model()
 
 
-class Blog(models.Model):
+class Post(models.Model):
     """
     this is a class to define posts for blog app
     """

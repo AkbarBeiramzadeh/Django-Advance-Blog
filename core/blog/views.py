@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import TemplateView, RedirectView
+from django.views.generic import ListView
 
 from .models import Post
-
 
 
 class IndexView(TemplateView):
@@ -26,3 +26,14 @@ class RedirectToMaktabView(RedirectView):
         print(post)
         return super().get_redirect_url(*args, **kwargs)
 
+
+class PostList(ListView):
+    # model = Post
+    # or
+    # queryset = Post.objects.all()
+    # or
+    def get_queryset(self):
+        posts = Post.objects.filter(status=True)
+        return posts
+
+    context_object_name = 'posts'

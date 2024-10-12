@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, FormView, CreateView, Upd
 
 from .forms import PostForm
 from .models import Post
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class IndexView(TemplateView):
@@ -28,7 +29,7 @@ class RedirectToMaktabView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostList(ListView):
+class PostList(LoginRequiredMixin,ListView):
     queryset = Post.objects.all().filter(status=True)
     paginate_by = 7
     # model = Post
@@ -40,7 +41,7 @@ class PostList(ListView):
     context_object_name = 'posts'
 
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin,DetailView):
     model = Post
     template_name = 'blog/my_post_detail.html'
 
@@ -49,7 +50,7 @@ class PostDetailView(DetailView):
         return context
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin,CreateView):
     model = Post
     # fields = ('author', 'title', 'content', 'status', 'category', 'published_date')
     form_class = PostForm
@@ -60,12 +61,12 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
-class PostEditView(UpdateView):
+class PostEditView(LoginRequiredMixin,UpdateView):
     model = Post
     form_class = PostForm
     success_url = '/blog/post/'
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin,DeleteView):
     model = Post
     success_url = '/blog/post/'

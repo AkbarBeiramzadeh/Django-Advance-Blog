@@ -11,6 +11,7 @@
         <a href="{% url 'blog:post-update' pk=post.id %}"><span style="background-color: coral;padding: 5px;border-radius: 5px;" >edit</span></a>
         <a href="{% url 'blog:post-delete' pk=post.id %}"><span style="background-color: #ec1138;padding: 5px;border-radius: 5px;" >delete</span></a>
         <p>{{ post.content }}</p>
+        <small>{{ post.author.first_name }}</small>
     </div>
 {% endfor %}
 <div class="pagination">

@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, FormView, CreateView, Upd
 
 from .forms import PostForm
 from .models import Post
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 class IndexView(TemplateView):
@@ -29,7 +29,8 @@ class RedirectToMaktabView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostList(LoginRequiredMixin,ListView):
+class PostList(PermissionRequiredMixin,LoginRequiredMixin, ListView):
+    permission_required = ('blog.view_post',)
     queryset = Post.objects.all().filter(status=True)
     paginate_by = 7
     # model = Post
@@ -41,7 +42,7 @@ class PostList(LoginRequiredMixin,ListView):
     context_object_name = 'posts'
 
 
-class PostDetailView(LoginRequiredMixin,DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'blog/my_post_detail.html'
 
@@ -50,7 +51,7 @@ class PostDetailView(LoginRequiredMixin,DetailView):
         return context
 
 
-class PostCreateView(LoginRequiredMixin,CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     # fields = ('author', 'title', 'content', 'status', 'category', 'published_date')
     form_class = PostForm
@@ -61,12 +62,12 @@ class PostCreateView(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
 
 
-class PostEditView(LoginRequiredMixin,UpdateView):
+class PostEditView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
     success_url = '/blog/post/'
 
 
-class PostDeleteView(LoginRequiredMixin,DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = '/blog/post/'

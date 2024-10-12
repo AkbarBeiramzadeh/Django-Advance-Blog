@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 
 from .forms import PostForm
 from .models import Post
@@ -43,6 +43,7 @@ class PostList(ListView):
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/my_post_detail.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
@@ -65,31 +66,6 @@ class PostEditView(UpdateView):
     success_url = '/blog/post/'
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class PostDeleteView(DeleteView):
+    model = Post
+    success_url = '/blog/post/'

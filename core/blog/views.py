@@ -29,7 +29,7 @@ class RedirectToMaktabView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostList(PermissionRequiredMixin,LoginRequiredMixin, ListView):
+class PostList(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     permission_required = ('blog.view_post',)
     queryset = Post.objects.all().filter(status=True)
     paginate_by = 7

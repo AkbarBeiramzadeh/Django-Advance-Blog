@@ -22,6 +22,7 @@ def post_list(request):
 
 
 @api_view(["GET", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk, status=True)
     if request.method == "GET":

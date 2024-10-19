@@ -6,6 +6,25 @@ from ...models import Post
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
+from rest_framework.views import APIView
+
+
+class PostList(APIView):
+    """
+    getting a list of posts and creating new posts
+    """
+    def get(self, request):
+        """retrieving a list of posts"""
+        posts = Post.objects.filter(status=True)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PostSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
 
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])

@@ -13,6 +13,9 @@ class PostList(APIView):
     """
     getting a list of posts and creating new posts
     """
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
     def get(self, request):
         """retrieving a list of posts"""
         posts = Post.objects.filter(status=True)
@@ -53,5 +56,33 @@ def post_detail(request, pk):
         serializer.save()
         return Response(serializer.data)
     elif request.method == "DELETE":
+        post.delete()
+        return Response({"detail": "item removed successfully"}, status=status.HTTP_200_OK)
+
+
+class PostDetail(APIView):
+    """
+    getting detail of the post and edit plus removing it.
+    """
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+
+    def get(self, request, pk):
+        """retrieving the post data"""
+        post = get_object_or_404(Post, pk=pk, status=True)
+        serializer = self.serializer_class(post)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        """editing the post data"""
+        post = get_object_or_404(Post, pk=pk, status=True)
+        serializer = PostSerializer(post, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        """ deleting the post object """
+        post = get_object_or_404(Post, pk=pk, status=True)
         post.delete()
         return Response({"detail": "item removed successfully"}, status=status.HTTP_200_OK)

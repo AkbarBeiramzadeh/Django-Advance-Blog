@@ -122,9 +122,10 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'author']
-    search_fields = ['title', 'content','category__name']
+    search_fields = ['title', 'content', 'category__name']
+    ordering_fields = ['id', 'created_date']
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):

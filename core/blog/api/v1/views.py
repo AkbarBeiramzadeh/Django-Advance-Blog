@@ -5,13 +5,12 @@ from .serializers import PostSerializer, CategorySerializer
 from ...models import Post, Category
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import mixins
-
 from rest_framework import viewsets
 from .permissions import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 @api_view(["GET", "POST"])
@@ -122,10 +121,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-
-    @action(methods=["get"], detail=False)
-    def get_ok(self, request):
-        return Response({'detail': 'ok'})
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'author']
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):

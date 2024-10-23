@@ -12,6 +12,7 @@ from rest_framework import viewsets
 from .permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from .paginations import DefaultPagination
 
 
 @api_view(["GET", "POST"])
@@ -126,6 +127,7 @@ class PostModelViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'author']
     search_fields = ['title', 'content', 'category__name']
     ordering_fields = ['id', 'created_date']
+    pagination_class = DefaultPagination
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):

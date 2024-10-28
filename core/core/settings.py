@@ -28,7 +28,6 @@ DEBUG = config("DEBUG", cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')], default="*")
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,8 +38,10 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'blog.apps.BlogConfig',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'drf_yasg',
+
 ]
 
 MIDDLEWARE = [
@@ -137,8 +138,11 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.IsAuthenticated',
     # ]
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+
 }
-
-
-

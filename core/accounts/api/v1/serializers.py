@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from ...models import Profile
 
 User = get_user_model()
 
@@ -94,3 +95,12 @@ class ChangePasswordSerializer(serializers.Serializer):
         except ValidationError as e:
             raise serializers.ValidationError({'new_password': list(e.messages)})
         return super().validate(attrs)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(source='user.email', read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = ('id', 'email', 'first_name', 'last_name', 'image', 'description')
+

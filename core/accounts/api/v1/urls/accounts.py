@@ -16,7 +16,7 @@ urlpatterns = [
     path('activation/confirm/<str:token>', views.ActivationApiView.as_view(), name='activation'),
 
     # resend activation
-    # path('activation/resend/'),
+    path('activation/resend/',views.ActivationResendApiView.as_view(),name='activation-resend'),
 
     # login token
     path('token/login/', views.CustomAuthToken.as_view(), name='token-login'),

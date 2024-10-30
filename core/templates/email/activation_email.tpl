@@ -6,5 +6,5 @@ Account Activation
 {% endblock %}
 
 {% block html %}
-htpp://127.0.0.1:8000/accounts/api/v1/activation/confirm/{{token}}
+http://127.0.0.1:8000/accounts/api/v1/activation/confirm/{{token}}
 {% endblock %}

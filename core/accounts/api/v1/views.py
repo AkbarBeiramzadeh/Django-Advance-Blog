@@ -1,3 +1,5 @@
+from decouple import config
+from jwt import ExpiredSignatureError, InvalidSignatureError
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -16,6 +18,7 @@ from mail_templated import EmailMessage
 from ..utils import EmailThread
 
 from rest_framework_simplejwt.tokens import RefreshToken
+import jwt
 
 User = get_user_model()
 
@@ -123,6 +126,37 @@ class TestEmailSend(generics.GenericAPIView):
 
 class ActivationApiView(APIView):
     def get(self, request, token, *args, **kwargs):
-        print(token)
+        try:
+            token = jwt.decode(token, config("SECRET_KEY"), algorithms=["HS256"])
+            user_id = token.get("user_id")
+        except ExpiredSignatureError:
+            return Response({"details": "token has been expired"}, status=status.HTTP_400_BAD_REQUEST)
+        except InvalidSignatureError:
+            return Response({"details": "token is not valid"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response("OK")
+        user_object = User.objects.get(pk=user_id)
+
+        if user_object.is_verified:
+            return Response({"details": "your account has already been verified."})
+        user_object.is_verified = True
+        user_object.save()
+
+        return Response({"details": "your account have been verified and activated successfully."})
+
+
+class ActivationResendApiView(APIView):
+    def post(self, request, *args, **kwargs):
+        email = request.get("email")
+        if email:
+            user_obj = get_object_or_404(User, email=email)
+            token = self.get_tokens_for_user(user_obj)
+            email_obj = EmailMessage('email/hello.tpl', {"token": token}, "admin@admin.com", to=[email])
+            EmailThread(email_obj).start()
+            return Response({"details": "user activation email resend successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"details": "invalid request"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+
+        return str(refresh.access_token)

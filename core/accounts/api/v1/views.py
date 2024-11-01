@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import RegistrationSerializer, CustomAuthTokenSerializer, CustomTokenObtainPairSerializer, \
-    ChangePasswordSerializer, ProfileSerializer
+    ChangePasswordSerializer, ProfileSerializer, ActivationResendSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -144,17 +144,17 @@ class ActivationApiView(APIView):
         return Response({"details": "your account have been verified and activated successfully."})
 
 
-class ActivationResendApiView(APIView):
+class ActivationResendApiView(generics.GenericAPIView):
+    serializer_class = ActivationResendSerializer
+
     def post(self, request, *args, **kwargs):
-        email = request.get("email")
-        if email:
-            user_obj = get_object_or_404(User, email=email)
-            token = self.get_tokens_for_user(user_obj)
-            email_obj = EmailMessage('email/hello.tpl', {"token": token}, "admin@admin.com", to=[email])
-            EmailThread(email_obj).start()
-            return Response({"details": "user activation email resend successfully"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"details": "invalid request"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_obj = serializer.validated_data['user']
+        token = self.get_tokens_for_user(user_obj)
+        email_obj = EmailMessage('email/activation_email.tpl', {"token": token}, "admin@admin.com", to=[user_obj.email])
+        EmailThread(email_obj).start()
+        return Response({"details": "user activation email resend successfully"}, status=status.HTTP_200_OK)
 
     def get_tokens_for_user(self, user):
         refresh = RefreshToken.for_user(user)

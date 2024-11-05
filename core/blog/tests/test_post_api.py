@@ -19,5 +19,7 @@ class TestPostApi:
         self.client.login(email=self.user.email, password=password)
         url = reverse("blog:api-v1:post-list")
         response = self.client.get(url)
-
         assert response.status_code == 200
+
+    def test_create_post_response_401_status(self):
+        pass

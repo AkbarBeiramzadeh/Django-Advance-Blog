@@ -45,7 +45,6 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("accounts/", include("accounts.urls", namespace="accounts")),
     path("", include("blog.urls")),
-    path("api-docs/", include_docs_urls(title="api sample")),
     path(
         "swagger/output.json",
         schema_view.without_ui(cache_timeout=0),

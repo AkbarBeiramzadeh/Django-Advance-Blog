@@ -10,11 +10,11 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
     - name: Setup Docker-Compose 
-      run: docker-compose up -d
+      run: docker ps -a
     - name: Run Tests
       run: docker exec backend sh -c "flake8 && pytest ."

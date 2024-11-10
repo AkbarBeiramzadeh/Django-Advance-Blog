@@ -25,7 +25,6 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["name"] = "ali"
         context["posts"] = Post.objects.all()
         return context
 
@@ -85,3 +84,7 @@ class PostEditView(LoginRequiredMixin, UpdateView):
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = "/blog/post/"
+
+
+class PostListApiView(TemplateView):
+    template_name = 'blog/post_list_api.html'

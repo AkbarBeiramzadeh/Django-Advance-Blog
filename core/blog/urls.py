@@ -11,6 +11,7 @@ urlpatterns = [
         name="redirect-to-maktabkhooneh",
     ),
     path("blog/post/", views.PostList.as_view(), name="post-list"),
+    path("blog/post/api/", views.PostListApiView.as_view(), name="post-list-api"),
     path(
         "post/<int:pk>/", views.PostDetailView.as_view(), name="post-detail"
     ),

@@ -5,10 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-    <div>
-        <h1>{{ object.title }}</h1>
-        <p>{{ object.content }}</p>
-        <small>{{ object.author }} - {{ object.created_date }}</small>
-    </div>
+<div>
+    <h1>{{ object.title }}</h1>
+    <p>{{ object.content }}</p>
+    <small>{{ object.author }} - {{ object.created_date }}</small>
+    <a style="background-color: red; color: white" href="{% url 'blog:post-delete' object.id %}">Delete</a>
+</div>
 </body>
 </html>

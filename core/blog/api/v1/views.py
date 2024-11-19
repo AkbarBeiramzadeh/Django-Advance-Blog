@@ -144,3 +144,15 @@ class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+import requests
+
+
+class WeatherApi(APIView):
+    def get(self, request, lat, long, api_key):
+        response = requests.get(
+            f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={long}&appid={api_key}')
+        return Response({"message": "GET request", "response": response.json()})

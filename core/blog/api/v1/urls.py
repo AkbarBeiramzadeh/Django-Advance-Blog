@@ -1,5 +1,6 @@
 from . import views
 from rest_framework.routers import SimpleRouter
+from django.urls import path
 
 app_name = "api-v1"
 
@@ -13,6 +14,9 @@ router.register("category", views.CategoryModelViewSet, basename="category")
 
 urlpatterns = router.urls
 
+urlpatterns += [
+    path('weather/<str:lat>/<str:long>/<str:api_key>/', views.WeatherApi.as_view(), name='weather'),
+]
 # urlpatterns = [
 #     # path('post/', views.post_list, name='post-list'),
 #     # path('post/<int:pk>/', views.post_detail, name='post-detail'),

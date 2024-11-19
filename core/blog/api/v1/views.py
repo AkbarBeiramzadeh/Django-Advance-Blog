@@ -154,7 +154,7 @@ import requests
 
 
 class WeatherApi(APIView):
-    @method_decorator(cache_page(60 * 60 * 2))
+    @method_decorator(cache_page(timeout=20 * 60))
     def get(self, request, lat, long, api_key):
         response = requests.get(
             f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={long}&appid={api_key}')

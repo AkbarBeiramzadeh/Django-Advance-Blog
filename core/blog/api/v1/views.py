@@ -14,6 +14,8 @@ from .permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from .paginations import DefaultPagination
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 @api_view(["GET", "POST"])
@@ -152,6 +154,7 @@ import requests
 
 
 class WeatherApi(APIView):
+    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, lat, long, api_key):
         response = requests.get(
             f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={long}&appid={api_key}')

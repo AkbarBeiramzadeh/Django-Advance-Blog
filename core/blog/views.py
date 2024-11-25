@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
+from django.urls import reverse_lazy
 
 from .forms import PostForm
 from .models import Post
@@ -74,11 +75,10 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 class PostEditView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
-    success_url = "/blog/post/"
+    template_name = 'blog/post_update.html'
+    success_url = reverse_lazy("blog:post-list")
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
